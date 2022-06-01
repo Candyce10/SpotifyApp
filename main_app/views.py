@@ -1,5 +1,5 @@
 from .models import Artist
-from django.shortcuts import render
+from django.shortcuts import redirect
 from django.views import View # handles requests
 from django.http import HttpResponse # handles sending a type of response
 from django.views.generic.base import TemplateView
@@ -8,6 +8,7 @@ from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse
+from .models import Artist, Song, Playlist
 
 # Create your views here.
 
@@ -77,4 +78,18 @@ class ArtistDelete(DeleteView):
     template_name = "artist_delete_confirmation.html"
     success_url = "/artists/"
 
-    
+class SongCreate(View):
+    def post(self, request, pk):
+        title = request.POST.get("title")
+        length = request.POST.get("length")
+        artist = Artist.objects.get(pk=pk)
+        Song.objects.create(title=title, length=length, artist=artist)
+        return redirect('artist_detail', pk=pk)
+
+class Home(TemplateView):
+    template_name = "home.html"
+    # Here we have added the playlists as context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["playlists"] = Playlist.objects.all()
+        return context
