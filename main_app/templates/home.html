@@ -12,6 +12,14 @@
                     <span>{{forloop.counter}}</span>
                     <span><b>{{song.title}}</b></span>
                     <span>{{song.get_length}}</span>
+                    <span>
+                        <!--   Here we are creating an anchor tag that when clicked will hit our new route and send a query to remove the song-->
+                        <a href="{% url 'playlist_song_assoc' playlist.pk song.pk %}?assoc=remove" class="button is-danger is-outlined">
+                            <span class="icon is-small"><i class="fas fa-times"></i></span>
+                        </a>
+                    </span>
+
+
                 </div>
 
             {% endfor %}
